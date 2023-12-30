@@ -1,13 +1,9 @@
 <template>
-  <HomeView />
+  <RouterView />
 </template>
 
 <script>
-import HomeView from './views/home/HomeView'
 export default {
-  name: 'App',
-  components: {
-    HomeView
-  }
+  name: 'App'
 }
 </script>
