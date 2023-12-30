@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .wrapper{
   //纵向溢出处理
   overflow-y: auto;
