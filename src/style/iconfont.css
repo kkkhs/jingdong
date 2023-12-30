@@ -1,13 +1,13 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 4393931 */
-  src: url('//at.alicdn.com/t/c/font_4393931_9jf1gfzqzdr.woff2?t=1703906203932') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4393931_9jf1gfzqzdr.woff?t=1703906203932') format('woff'),
-       url('//at.alicdn.com/t/c/font_4393931_9jf1gfzqzdr.ttf?t=1703906203932') format('truetype');
+  font-family: 'iconfont';  /* Project id 4393931 */
+  src: url('//at.alicdn.com/t/c/font_4393931_yj4xi4ihje.woff2?t=1703909143048') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4393931_yj4xi4ihje.woff?t=1703909143048') format('woff'),
+       url('//at.alicdn.com/t/c/font_4393931_yj4xi4ihje.ttf?t=1703909143048') format('truetype');
 }
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
+  font-size: .16rem;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
