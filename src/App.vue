@@ -6,6 +6,13 @@
         合肥工业大学宣城校区南区9号楼1层
         <span class="iconfont position__notice">&#xe6cc;</span>
       </div>
+      <div class="search">
+        <span class="iconfont">&#xecc4;</span>
+        <input class="search__input" type="text" name="" id="" placeholder="山姆会员商店优惠商品">
+      </div>
+      <div class="banner">
+        <img class="banner__img" src="http://www.dell-lee.com/imgs/vue3/banner.jpg" alt="">
+      </div>
     </div>
 
     <div class="docker">
@@ -59,6 +66,44 @@
     top: .17rem;
   }
   color:$content-fontcolor;
+}
+.search{
+  display: flex;
+  align-items: center;
+  margin-bottom: .12rem;
+  line-height: .32rem;
+  background: #f5f5f5;
+  color: #b7b7b7;
+  border-radius: .16rem;
+
+  .iconfont{
+    position: relative;
+    display: inline-block;
+    padding: 0 .1rem 0 .16rem;
+    font-size: .16rem;
+  }
+
+  &__input{
+    flex: 1;
+    display: inline-block;
+    font-size: .14rem;
+    border: none;
+    //聚焦时的样式：
+    outline: none;
+    background:#f5f5f5;
+    height: 100%;
+  }
+}
+
+.banner{
+  //防止加载图片时下方内容抖动
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 25.4%;        //图片高宽比
+
+  &__img{
+    width: 100%;
+  }
 }
 .docker{
   display: flex;
