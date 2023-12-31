@@ -12,8 +12,8 @@
 
 <script>
 export default {
-  name: 'DockerView',
-  setup () {
+  name: 'Docker',
+  setup() {
     const dockerList = [
       { icon: '&#xe63f;', text: '首页' },
       { icon: '&#xe6af;', text: '购物车' },

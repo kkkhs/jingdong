@@ -1,21 +1,21 @@
 <template>
   <div class="wrapper">
-    <StaticPartView />
-    <NearbyView />
+    <StaticPart />
+    <Nearby />
   </div>
-  <DockerView />
+  <Docker />
 </template>
 
 <script>
-import StaticPartView from './StaticPartView.vue'
-import NearbyView from './NearbyView.vue'
-import DockerView from './DockerView.vue'
+import StaticPart from './StaticPart.vue'
+import Nearby from './Nearby.vue'
+import Docker from './Docker.vue'
 export default {
-  name: 'HomeView',
+  name: 'Home',
   components: {
-    StaticPartView,
-    NearbyView,
-    DockerView
+    StaticPart,
+    Nearby,
+    Docker
   }
 }
 </script>
