@@ -11,7 +11,11 @@ const routes = [
   {
     path: '/login',
     name: 'LoginView',
-    component: LoginView
+    component: LoginView,
+    beforeEnter: (to, from, next) => { // 每次进入该路由前执行
+      const { isLogin } = localStorage
+      isLogin ? next({ name: 'HomeView' }) : next()
+    }
   }
   // {
   //   path: '/about',
@@ -26,6 +30,13 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach((to, from, next) => { // 每次路由跳转前执行
+  const { isLogin } = localStorage;
+  (isLogin || to.name === 'LoginView')
+    ? next()
+    : next({ name: 'LoginView' })
 })
 
 export default router
