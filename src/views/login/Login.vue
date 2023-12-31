@@ -4,7 +4,7 @@
     <div class="wrapper__input">
       <input
         class="wrapper__input__content"
-        placeholder="请输入手机号"
+        placeholder="请输入用户名"
         v-model="username"
         />
     </div>
@@ -14,6 +14,7 @@
         placeholder="请输入密码"
         type="password"
         v-model="password"
+        autocomplete="new-password"
       />
     </div>
     <div class="wrapper__login-button" @click="handleLogin">登陆</div>
@@ -28,22 +29,27 @@ import { useRouter } from 'vue-router'
 import { post } from '@/utils/request'
 import Toast, { useToastEffect } from '@/components/Toast.vue'
 
+// 处理登陆相关逻辑
 const useLoginEffect = (showToast) => {
   const router = useRouter()
   const data = reactive({ username: '', password: '' })
   const handleLogin = async () => { // async 函数
     try {
-      const result = await post('/api/user/login', {
-        username: data.username,
-        password: data.password
-      })
-      if (result?.errno === 0) {
-        localStorage.isLogin = true
-        router.push({ name: 'Home' })
-      } else if (result?.code === '0002') {
-        showToast('请求失败!')
+      if (data.username !== '' && data.password !== '') {
+        const result = await post('/api/user/login', {
+          username: data.username,
+          password: data.password
+        })
+        if (result?.errno === 0) {
+          localStorage.isLogin = true
+          router.push({ name: 'Home' })
+        } else if (result?.code === '0002') {
+          showToast('请求失败')
+        } else {
+          showToast('账号或密码错误')
+        }
       } else {
-        showToast('账号或密码错误!')
+        showToast('账号或密码不能为空')
       }
     } catch (e) {
       showToast('请求失败')
@@ -56,6 +62,7 @@ const useLoginEffect = (showToast) => {
   }
 }
 
+// 处理注册跳转
 const useRegisterEffect = () => {
   const router = useRouter()
   const handleRegisterClick = () => {
