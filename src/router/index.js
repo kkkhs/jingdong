@@ -1,30 +1,30 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '@/views/home/Home.vue'
-import RegisterView from '@/views/register/Register.vue'
-import LoginView from '@/views/login/Login.vue'
+import Home from '@/views/home/Home.vue'
+import Register from '@/views/register/Register.vue'
+import Login from '@/views/login/Login.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'HomeView',
-    component: HomeView
+    name: 'Home',
+    component: Home
   },
   {
     path: '/register',
-    name: 'RegisterView',
-    component: RegisterView,
+    name: 'Register',
+    component: Register,
     beforeEnter: (to, from, next) => { // 每次进入该路由前执行
       const { isLogin } = localStorage
-      isLogin ? next({ name: 'HomeView' }) : next()
+      isLogin ? next({ name: 'Home' }) : next()
     }
   },
   {
     path: '/login',
-    name: 'LoginView',
-    component: LoginView,
+    name: 'Login',
+    component: Login,
     beforeEnter: (to, from, next) => { // 每次进入该路由前执行
       const { isLogin } = localStorage
-      isLogin ? next({ name: 'HomeView' }) : next()
+      isLogin ? next({ name: 'Home' }) : next()
     }
   }
   // {
@@ -45,10 +45,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => { // 每次路由跳转前执行
   const { isLogin } = localStorage
   const { name } = to
-  const isLoginOrRegister = (name === 'LoginView' || name === 'RegisterView');
+  const isLoginOrRegister = (name === 'Login' || name === 'Register');
   (isLogin || isLoginOrRegister)
     ? next()
-    : next({ name: 'LoginView' })
+    : next({ name: 'Login' })
 })
 
 export default router
