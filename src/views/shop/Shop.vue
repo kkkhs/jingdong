@@ -12,35 +12,48 @@
         <input class="search__content__input" placeholder="请输入商品名称"/>
       </div>
     </div>
-    <ShopInfo :item="data.item" :hideBorder="true"/>
+    <ShopInfo :item="item" :hideBorder="true" v-show="item.imgUrl"/>
   </div>
 </template>
 
 <script>
 import ShopInfo from '@/components/ShopInfo'
 import { get } from '@/utils/request'
-import { reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, toRefs } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const useShopInfoEffect = () => {
+  const route = useRoute() // 当前页面的路由信息
+  const data = reactive({ item: {} }) // item精简的定义方法
+  const getItemData = async () => {
+    const result = await get(`/api/shop/${route.params.id}`) // 利用route.params.id获取路由的id
+    if (result?.errno === 0 && result?.data) {
+      data.item = result.data
+    }
+  }
+  const { item } = toRefs(data)
+
+  return { item, getItemData }
+}
+
+const useBackRouterEffect = () => {
+  const router = useRouter()
+  const handleBackClick = () => {
+    router.back() // 返回上个页面
+  }
+
+  return { handleBackClick }
+}
+
 export default ({
   name: 'Shop',
   components: { ShopInfo },
   setup() {
-    const router = useRouter()
-    const data = reactive({ item: {} })
-    const getItemData = async () => {
-      const result = await get('/api/shop/1')
-      if (result?.errno === 0 && result?.data) {
-        data.item = result.data
-      }
-    }
-
+    const { item, getItemData } = useShopInfoEffect()
+    const { handleBackClick } = useBackRouterEffect()
     getItemData()
 
-    const handleBackClick = () => {
-      router.push({ name: 'Home' })
-    }
-
-    return { data, handleBackClick }
+    return { item, handleBackClick }
   }
 })
 </script>
