@@ -3,10 +3,10 @@
     <div class="check">
       <div class="check__icon">
         <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png">
-        <div class="check__icon__tag">1</div>
+        <div class="check__icon__tag">{{ total }}</div>
       </div>
       <div class="check__info">
-        总计：<span class="check__info__price">&yen;127</span>
+        总计：<span class="check__info__price">&yen; {{ price }}</span>
       </div>
       <div class="check__btn">去结算</div>
     </div>
@@ -14,8 +14,50 @@
 </template>
 
 <script>
-export default {
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
+// 获取购物车信息逻辑
+const useCartEffect = () => {
+  const store = useStore()
+  const route = useRoute()
+  const shopId = route.params.id
+  const cartList = store.state.cartList
+
+  const total = computed(() => {
+    const productList = cartList[shopId]
+    let count = 0
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        count += product.count
+      }
+    }
+    return count
+  })
+  const price = computed(() => {
+    const productList = cartList[shopId]
+    let count = 0
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        count += (product.count * product.price)
+      }
+    }
+    return count.toFixed(2)
+  })
+
+  return { total, price }
+}
+
+export default {
+  name: 'Cart',
+  setup() {
+    const { total, price } = useCartEffect()
+
+    return { total, price }
+  }
 }
 </script>
 
@@ -44,17 +86,18 @@ export default {
     }
     &__tag{
       position: absolute;
-      top: .05rem;
-      right: .2rem;
-      width: .2rem;
-      height: .2rem;
+      left: .48rem;
+      top: .02rem;
+      padding: .02rem .02rem;
+      min-width: .2rem;
       line-height: .2rem;
       background-color: $heightlight-font-color;
-      border-radius: 50%;
-      font-size: .12rem;
+      border-radius: .3rem;
+      font-size: .13rem;
       text-align: center;
       color: $active-color;
       transform: scale(.7);
+      transform-origin: left center;
     }
   }
   &__info{
