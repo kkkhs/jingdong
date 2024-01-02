@@ -19,6 +19,11 @@
             <span class="product__item__origin">&yen;66.6</span>
           </p>
         </div>
+        <div class="product__number">
+          <span class="product__number__minus">-</span>
+          0
+          <span class="product__number__plus">+</span>
+        </div>
       </div>
     </div>
   </div>
@@ -34,6 +39,9 @@ export default ({
 </script>
 
 <style lang="scss" scoped>
+@import '@/style/variables.scss';
+@import '@/style/mixins.scss';
+
 .content{
   position: absolute;
   display: flex;
@@ -47,14 +55,14 @@ export default ({
   overflow-y: scroll;
   width: .76rem;
   height: 100%;
-  background: #f5f5f5;
+  background: $search-bgColor;
   &__item{
     line-height: .4rem;
     text-align: center;
     font-size: 14px;
-    color: #333;
+    color: $content-fontcolor;
     &--active{
-      background: #FFF;
+      background: $active-color;
     }
   }
 }
@@ -62,10 +70,14 @@ export default ({
   overflow-y: scroll;
   flex: 1;
   &__item{
+    position: relative;
     display: flex;
     padding: .12rem 0;
     margin: 0 .16rem;
-    border-bottom: .01rem solid #f1f1f1;
+    border-bottom: .01rem solid $content-bgColor;
+    &__detail{
+      overflow: hidden;
+    }
     &__img{
       width: .68rem;
       height: .68rem;
@@ -75,13 +87,14 @@ export default ({
       margin: 0;
       line-height: .2rem;
       font-size: .14rem;
-      color: #333;
+      color: $content-fontcolor;
+      @include ellipsis;
     }
     &__sales{
       margin: .06rem 0;
       line-height: .16rem;
       font-size: .12rem;
-      color: #333;
+      color: $content-fontcolor;
     }
     &__price{
       margin: 0;
@@ -96,8 +109,35 @@ export default ({
       margin-left: .06rem;
       line-height: .2rem;
       font-size: .12rem;
-      color: #999;
+      color: $light-fontColor;
       text-decoration: line-through;
+    }
+    .product__number{
+      position: absolute;;
+      right: 0;
+      bottom: .12rem;
+      &__minus,&__plus
+      {
+        // 与 display: inline 相比，主要区别在于 display: inline-block 允许在元素上设置宽度和高度。
+        // 同样，如果设置了 display: inline-block，将保留上下外边距/内边距，而 display: inline 则不会。
+        display: inline-block;
+        width: .2rem;
+        height: .2rem;
+        line-height: .16rem;
+        border-radius: 50%;
+        font-size: .2rem;
+        text-align: center;
+      }
+      &__minus{
+        margin-right: .05rem;
+        border: .01rem solid $medium-fontColor;
+        color: $medium-fontColor;
+      }
+      &__plus{
+        margin-left: .05rem;
+        background: $btn-bgColor;
+        color: $active-color;
+      }
     }
   }
 }

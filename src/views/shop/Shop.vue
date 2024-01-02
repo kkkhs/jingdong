@@ -61,6 +61,8 @@ export default ({
 </script>
 
 <style lang="scss" scoped>
+@import '@/style/variables.scss';
+
 .wrapper{
   padding: 0 .18rem;
 }
@@ -76,12 +78,12 @@ export default ({
   &__content{
     display: flex;
     flex: 1;
-    background: #f5f5f5;
+    background: $search-bgColor;
     border-radius: .16rem;
     &__icon{
       width: .44rem;
       text-align: center;
-      color: #b7b7b7;
+      color: $search-fontColor;
     }
     &__input{
       padding-right: .2rem;
@@ -92,9 +94,9 @@ export default ({
       background: none;
       height: .32rem;
       font-size: .14rem;
-      color: #333;
+      color: $content-fontcolor;
       &::placeholder{
-        color: #333;
+        color: $content-fontcolor;
       }
     }
   }
