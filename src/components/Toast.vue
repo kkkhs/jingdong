@@ -38,6 +38,6 @@ export const useToastEffect = () => {
   padding: .1rem;
   background: rgba(0, 0, 0, .35);
   border-radius: .05rem ;
-  color: #FFF;
+  color: $active-color;
 }
 </style>
