@@ -94,7 +94,7 @@ export default ({
     const { list } = useCurrentListEffect(currentTab, shopId)
     const { cartList, changeCartItemInfo } = useCommonCartEffect()
 
-    return { shopId, list, categories, currentTab, cartList, handleTabClick, changeCartItemInfo }
+    return { cartList, shopId, list, categories, currentTab, handleTabClick, changeCartItemInfo }
   }
 })
 </script>
@@ -160,7 +160,7 @@ export default ({
       margin: 0;
       line-height: .2rem;
       font-size: .14rem;
-      color: #b93b3b;
+      color: $price-color;
     }
     &__yen{
       font-size: .12rem;
