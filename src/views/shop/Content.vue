@@ -28,12 +28,12 @@
         <div class="product__number">
           <span
             class="product__number__minus"
-            @click="() => {changeCartItemInfo(shopId, item._id, item, -1)}"
+            @click="() => {changeCartItem(shopId, item._id, item, -1, shopName)}"
           >-</span>
-          {{ cartList?.[shopId]?.[item._id]?.count || 0 }}
+          {{ cartList?.[shopId]?.productList?.[item._id]?.count || 0 }}
           <span
             class="product__number__plus"
-            @click="() => {changeCartItemInfo(shopId, item._id, item, 1)}"
+            @click="() => {changeCartItem(shopId, item._id, item, 1, shopName)}"
           >+</span>
         </div>
       </div>
@@ -46,6 +46,7 @@ import { reactive, toRef, toRefs, watchEffect } from 'vue'
 import { get } from '@/utils/request'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect.js'
+import { useStore } from 'vuex'
 
 const categories = [
   { name: '全部商品', tab: 'all' },
@@ -84,17 +85,31 @@ const useCurrentListEffect = (currentTab, shopId) => {
   return { shopId, list }
 }
 
+const useCartEffect = () => {
+  const store = useStore()
+  const { cartList, changeCartItemInfo } = useCommonCartEffect()
+
+  const changeShopName = (shopId, shopName) => {
+    store.commit('changeShopName', { shopId, shopName })
+  }
+  const changeCartItem = (shopId, productId, item, num, shopName) => {
+    changeCartItemInfo(shopId, productId, item, num)
+    changeShopName(shopId, shopName)
+  }
+  return { cartList, changeCartItem }
+}
+
 export default ({
   name: 'Content',
+  props: ['shopName'],
   setup() {
     const route = useRoute()
     const shopId = route.params.id
-
     const { currentTab, handleTabClick } = useTabEffect()
     const { list } = useCurrentListEffect(currentTab, shopId)
-    const { cartList, changeCartItemInfo } = useCommonCartEffect()
+    const { cartList, changeCartItem } = useCartEffect()
 
-    return { cartList, shopId, list, categories, currentTab, handleTabClick, changeCartItemInfo }
+    return { cartList, shopId, list, categories, currentTab, handleTabClick, changeCartItem }
   }
 })
 </script>
@@ -142,6 +157,7 @@ export default ({
       width: .68rem;
       height: .68rem;
       margin-right: .16rem;
+      border-radius: .1rem;
     }
     &__title{
       margin: 0;

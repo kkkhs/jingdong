@@ -1,24 +1,21 @@
 <template>
   <div
     class="mask"
-    v-if="showCart"
+    v-if="showCart && caculations.total"
     @click="handleCartShowChange"
   ></div>
   <div class="cart" >
-    <div class="product" v-if="showCart">
+    <div class="product" v-if="showCart && caculations.total">
       <div class="product__header">
         <div class="product__header__all" @click="setCartItemChecked">
           <span
             class="product__header__icon iconfont"
-            v-html="allChecked ? '&#xe652;' : '&#xe619;'"
-          >
-          </span>
+            v-html="caculations.allChecked ? '&#xe652;' : '&#xe619;'"
+          ></span>
           全选
         </div>
-        <div
-          class="product__header__clear"
-        >
-          <span  @click="cleanCartProducts">清空购物车</span>
+        <div class="product__header__clear">
+          <span class="product__header__clear__btn"  @click="cleanCartProducts">清空购物车</span>
         </div>
       </div>
       <template
@@ -60,12 +57,16 @@
         @click="handleCartShowChange"
       >
         <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png">
-        <div class="check__icon__tag">{{ total }}</div>
+        <div class="check__icon__tag">{{ caculations.total }}</div>
       </div>
       <div class="check__info">
-        总计：<span class="check__info__price">&yen; {{ price }}</span>
+        总计：<span class="check__info__price">&yen; {{ caculations.price }}</span>
       </div>
-      <div class="check__btn">去结算</div>
+      <div class="check__btn">
+        <router-link :to="{name: 'Home'}">
+          去结算
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -81,55 +82,30 @@ const useCartEffect = () => {
   const { changeCartItemInfo } = useCommonCartEffect()
   const store = useStore()
   const route = useRoute()
-  const showCart = ref(false)
   const shopId = route.params.id
   const cartList = store.state.cartList
 
-  const handleCartShowChange = () => {
-    showCart.value = !showCart.value
-  }
-
-  const total = computed(() => {
-    const productList = cartList[shopId]
-    let count = 0
+  const caculations = computed(() => {
+    const productList = cartList[shopId]?.productList
+    const result = { total: 0, price: 0, allChecked: true }
     if (productList) {
       for (const i in productList) {
         const product = productList[i]
-        count += product.count
-      }
-    }
-    return count
-  })
-  const price = computed(() => {
-    const productList = cartList[shopId]
-    let count = 0
-    if (productList) {
-      for (const i in productList) {
-        const product = productList[i]
+        result.total += product.count
         if (product.check) {
-          count += (product.count * product.price)
+          result.price += (product.count * product.price)
         }
-      }
-    }
-    return count.toFixed(2)
-  })
-
-  const allChecked = computed(() => {
-    const productList = cartList[shopId]
-    let result = true
-    if (productList) {
-      for (const i in productList) {
-        const product = productList[i]
         if (product.count && !product.check) {
-          result = false
+          result.allChecked = false
         }
       }
     }
+    result.price = result.price.toFixed(2)
     return result
   })
 
   const productList = computed(() => {
-    const productList = cartList[shopId] || []
+    const productList = cartList[shopId]?.productList || []
     return productList
   })
 
@@ -145,17 +121,27 @@ const useCartEffect = () => {
     store.commit('setCartItemChecked', { shopId })
   }
 
-  return { total, price, productList, allChecked, showCart, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked, handleCartShowChange }
+  return { shopId, productList, caculations, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked }
+}
+
+// 展示/隐藏购物车逻辑
+const toggleCartEffect = (total) => {
+  const showCart = ref(false)
+
+  const handleCartShowChange = () => {
+    showCart.value = !showCart.value
+  }
+
+  return { showCart, handleCartShowChange }
 }
 
 export default {
   name: 'Cart',
   setup() {
-    const route = useRoute()
-    const shopId = route.params.id
-    const { total, price, productList, allChecked, showCart, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked, handleCartShowChange } = useCartEffect()
+    const { productList, shopId, caculations, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked } = useCartEffect()
+    const { showCart, handleCartShowChange } = toggleCartEffect(caculations.total)
 
-    return { total, price, productList, shopId, allChecked, showCart, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked, handleCartShowChange }
+    return { productList, shopId, caculations, showCart, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItemChecked, handleCartShowChange }
   }
 }
 </script>
@@ -204,6 +190,9 @@ export default {
       flex: 1;
       margin-right: .16rem;
       text-align: right;
+      &__btn{
+        display: inline-block;
+      }
     }
   }
   &__item{
@@ -225,6 +214,7 @@ export default {
       width: .46rem;
       height: .46rem;
       margin-right: .16rem;
+      border-radius: .1rem;
     }
     &__title{
       margin: 0;
@@ -253,7 +243,7 @@ export default {
     .product__number{
       position: absolute;;
       right: 0;
-      bottom: .12rem;
+      bottom: .26rem;
       &__minus,&__plus
       {
         // 与 display: inline 相比，主要区别在于 display: inline-block 允许在元素上设置宽度和高度。
@@ -321,11 +311,16 @@ export default {
     }
   }
   &__btn{
-    width: .98rem;
+    width: 1.08rem;
     color: $active-color;
     background-color: #4fb0f9;
+    border-radius: .3rem;
     font-size: .14rem;
     text-align: center;
+    a {
+      color: $active-color;
+      text-decoration: none;
+    }
   }
 }
 </style>
