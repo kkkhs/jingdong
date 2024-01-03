@@ -1,5 +1,33 @@
 <template>
   <div class="cart">
+    <div class="product">
+      <template
+        v-for="item in productList"
+        :key="item._id"
+      >
+        <div class="product__item" v-if="item.count > 0">
+          <img class="product__item__img" :src="item.imgUrl">
+          <div class="product__item__detail">
+            <h4 class="product__item__title">{{ item.name }}</h4>
+            <p class="product__item__price">
+              <span class="product__item__yen">&yen;</span>{{ item.price }}
+              <span class="product__item__origin">&yen;{{ item.oldPrice }}</span>
+            </p>
+          </div>
+          <div class="product__number">
+            <span
+              class="product__number__minus"
+              @click="() => {changeCartItemInfo(shopId, item._id, item, -1)}"
+            >-</span>
+            {{ item.count || 0 }}
+            <span
+              class="product__number__plus"
+              @click="() => {changeCartItemInfo(shopId, item._id, item, 1)}"
+            >+</span>
+          </div>
+        </div>
+      </template>
+    </div>
     <div class="check">
       <div class="check__icon">
         <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png">
@@ -17,6 +45,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import { useCommonCartEffect } from './commonCartEffect.js'
 
 // 获取购物车信息逻辑
 const useCartEffect = () => {
@@ -48,26 +77,105 @@ const useCartEffect = () => {
     return count.toFixed(2)
   })
 
-  return { total, price }
+  const productList = computed(() => {
+    const productList = cartList[shopId] || []
+    return productList
+  })
+
+  return { total, price, productList }
 }
 
 export default {
   name: 'Cart',
   setup() {
-    const { total, price } = useCartEffect()
+    const route = useRoute()
+    const shopId = route.params.id
+    const { total, price, productList } = useCartEffect()
+    const { changeCartItemInfo } = useCommonCartEffect()
 
-    return { total, price }
+    return { total, price, productList, shopId, changeCartItemInfo }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/style/mixins.scss';
 @import '@/style/variables.scss';
 .cart{
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
+}
+.product{
+  overflow-y: scroll;
+  flex: 1;
+  background: #FFF;
+  &__item{
+    position: relative;
+    display: flex;
+    padding: .12rem 0;
+    margin: 0 .16rem;
+    border-bottom: .01rem solid $content-bgColor;
+    &__detail{
+      overflow: hidden;
+    }
+    &__img{
+      width: .46rem;
+      height: .46rem;
+      margin-right: .16rem;
+    }
+    &__title{
+      margin: 0;
+      line-height: .2rem;
+      font-size: .14rem;
+      color: $content-fontcolor;
+      @include ellipsis;
+    }
+    &__price{
+      margin: .06rem 0 0 0;
+      line-height: .2rem;
+      font-size: .14rem;
+      color: #b93b3b;
+    }
+    &__yen{
+      font-size: .12rem;
+    }
+    &__origin{
+      margin-left: .06rem;
+      line-height: .2rem;
+      font-size: .12rem;
+      color: $light-fontColor;
+      text-decoration: line-through;
+    }
+    .product__number{
+      position: absolute;;
+      right: 0;
+      bottom: .12rem;
+      &__minus,&__plus
+      {
+        // 与 display: inline 相比，主要区别在于 display: inline-block 允许在元素上设置宽度和高度。
+        // 同样，如果设置了 display: inline-block，将保留上下外边距/内边距，而 display: inline 则不会。
+        display: inline-block;
+        width: .2rem;
+        height: .2rem;
+        line-height: .16rem;
+        border-radius: 50%;
+        font-size: .2rem;
+        text-align: center;
+      }
+      &__minus{
+        margin-right: .05rem;
+        border: .01rem solid $medium-fontColor;
+        color: $medium-fontColor;
+      }
+      &__plus{
+        margin-left: .05rem;
+        background: $btn-bgColor;
+        color: $active-color;
+      }
+    }
+  }
 }
 .check{
   display: flex;
