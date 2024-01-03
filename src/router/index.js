@@ -7,6 +7,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '@/views/home/Home.vue')
   },
   {
+    path: '/cartList',
+    name: 'CartList',
+    component: () => import(/* webpackChunkName: "cartList" */ '@/views/cartList/CartList.vue')
+  },
+  {
     path: '/shop/:id', // 可利用route.params.id获取路由的id
     name: 'Shop',
     component: () => import(/* webpackChunkName: "shop" */ '@/views/shop/Shop.vue')
