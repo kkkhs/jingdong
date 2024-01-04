@@ -72,42 +72,17 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { useCommonCartEffect } from './commonCartEffect.js'
+import { useCommonCartEffect } from '@/effects/cartEffects'
 
 // 获取购物车信息逻辑
 const useCartEffect = () => {
-  const { changeCartItemInfo } = useCommonCartEffect()
   const store = useStore()
   const route = useRoute()
   const shopId = route.params.id
-  const cartList = store.state.cartList
-
-  const caculations = computed(() => {
-    const productList = cartList[shopId]?.productList
-    const result = { total: 0, price: 0, allChecked: true }
-    if (productList) {
-      for (const i in productList) {
-        const product = productList[i]
-        result.total += product.count
-        if (product.check) {
-          result.price += (product.count * product.price)
-        }
-        if (product.count && !product.check) {
-          result.allChecked = false
-        }
-      }
-    }
-    result.price = result.price.toFixed(2)
-    return result
-  })
-
-  const productList = computed(() => {
-    const productList = cartList[shopId]?.productList || []
-    return productList
-  })
+  const { changeCartItemInfo, productList, caculations } = useCommonCartEffect(shopId)
 
   const changeCartItemChecked = (productId) => {
     store.commit('changeCartItemChecked', { shopId, productId })
@@ -228,7 +203,6 @@ export default {
       line-height: .2rem;
       font-size: .14rem;
       color: $price-color;
-;
     }
     &__yen{
       font-size: .12rem;
