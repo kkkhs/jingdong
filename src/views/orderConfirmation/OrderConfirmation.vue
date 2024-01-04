@@ -36,7 +36,7 @@
                 </span>
                 <span class="products__item__total">
                   <span class="products__item__yen">&yen;</span>
-                  {{ item.price * item.count }}
+                  {{ (item.price * item.count).toFixed(2) }}
                 </span>
               </p>
             </div>
