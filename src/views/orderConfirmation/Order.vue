@@ -10,35 +10,62 @@
       <div class="mask__content__btns">
         <div
           class="mask__content__btn mask__content__btn--first"
-          @click="handleCancelOrder"
+          @click="() => handleConfirmOrder(true)"
         >取消订单</div>
         <div
           class="mask__content__btn mask__content__btn--last"
-          @click="handleConfirmOrder"
+          @click="() => handleConfirmOrder(false)"
         >确认支付</div>
       </div>
+      <Toast v-if="show" :message="toastMessage"/>
     </div>
   </div>
 </template>
 <script>
+import { useRoute, useRouter } from 'vue-router'
+import { post } from '@/utils/request'
 import { useCommonCartEffect } from '@/effects/cartEffects.js'
-import { useRoute } from 'vue-router'
+import Toast, { useToastEffect } from '@/components/Toast.vue'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Order',
+  components: { Toast },
   setup() {
+    const router = useRouter()
     const route = useRoute()
-    const shopId = route.params.id
-    const { caculations } = useCommonCartEffect(shopId)
+    const store = useStore()
+    const shopId = parseInt(route.params.id, 10)
+    const { shopName, caculations, productList } = useCommonCartEffect(shopId)
+    const { show, toastMessage, showToast } = useToastEffect()
 
-    const handleCancelOrder = () => {
-
+    const handleConfirmOrder = async (isCanceled) => {
+      const products = []
+      for (const i in productList.value) {
+        const product = productList.value[i]
+        products.push({ id: parseInt(product._id, 10), num: product.count })
+      }
+      try {
+        const result = await post('/api/order', {
+          addressId: 1,
+          shopId,
+          shopName: shopName.value,
+          isCanceled,
+          products
+        })
+        console.log(result)
+        if (result?.errno === 0) {
+          store.commit('clearCartData', shopId)
+          router.push({ name: 'Home' })
+        } else {
+          showToast('下单失败')
+        }
+      } catch (e) {
+        showToast('下单失败')
+      }
     }
-    const handleConfirmOrder = () => {
 
-    }
-
-    return { caculations, handleCancelOrder, handleConfirmOrder }
+    return { caculations, handleConfirmOrder, show, toastMessage }
   }
 }
 </script>

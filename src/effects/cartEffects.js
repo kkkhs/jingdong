@@ -9,8 +9,16 @@ export const useCommonCartEffect = (shopId) => {
     store.commit('changeCartItemInfo', { shopId, productId, productInfo, num })
   }
   const productList = computed(() => {
-    const productList = cartList[shopId]?.productList || []
-    return productList
+    const productList = cartList[shopId]?.productList || {}
+    const notEmptyProductList = {}
+    for (const i in productList) {
+      const product = productList[i]
+      // 过滤0商品
+      if (product.count > 0) {
+        notEmptyProductList[i] = product
+      }
+    }
+    return notEmptyProductList
   })
   const shopName = computed(() => {
     const shopName = cartList[shopId]?.shopName || ''

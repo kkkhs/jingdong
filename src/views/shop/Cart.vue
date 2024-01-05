@@ -22,7 +22,7 @@
         v-for="item in productList"
         :key="item._id"
       >
-        <div class="product__item" v-if="item.count > 0">
+        <div class="product__item">
           <div
             class="product__item__checked iconfont"
             v-html="item.check ? '&#xe652;' : '&#xe619;'"
