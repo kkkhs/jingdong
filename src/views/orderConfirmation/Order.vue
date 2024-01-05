@@ -1,10 +1,14 @@
 <template>
   <div class="order">
     <div class="order__price">实付金额：<b>&yen;{{ caculations.price }}</b></div>
-    <div class="order__btn">提交订单</div>
+    <div class="order__btn" @click="() => handleSubmitClick(true)">提交订单</div>
   </div>
-  <div class="mask">
-    <div class="mask__content">
+  <div
+    class="mask"
+    v-show="showConfirm"
+    @click="() => handleSubmitClick(false)"
+  >
+    <div class="mask__content" @click.stop>
       <h3 class="mask__content__title">确认要离开收银台？</h3>
       <p class="mask__content__desc">请尽快完成支付，否则将被取消</p>
       <div class="mask__content__btns">
@@ -27,6 +31,7 @@ import { post } from '@/utils/request'
 import { useCommonCartEffect } from '@/effects/cartEffects.js'
 import Toast, { useToastEffect } from '@/components/Toast.vue'
 import { useStore } from 'vuex'
+import { ref } from 'vue'
 
 export default {
   name: 'Order',
@@ -36,8 +41,15 @@ export default {
     const route = useRoute()
     const store = useStore()
     const shopId = parseInt(route.params.id, 10)
+
+    const showConfirm = ref(false)
+
     const { shopName, caculations, productList } = useCommonCartEffect(shopId)
     const { show, toastMessage, showToast } = useToastEffect()
+
+    const handleSubmitClick = (state) => {
+      showConfirm.value = state
+    }
 
     const handleConfirmOrder = async (isCanceled) => {
       const products = []
@@ -65,7 +77,7 @@ export default {
       }
     }
 
-    return { caculations, handleConfirmOrder, show, toastMessage }
+    return { caculations, show, toastMessage, showConfirm, handleConfirmOrder, handleSubmitClick }
   }
 }
 </script>
