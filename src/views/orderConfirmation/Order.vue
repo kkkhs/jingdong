@@ -33,54 +33,66 @@ import Toast, { useToastEffect } from '@/components/Toast.vue'
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 
+// 下单相关逻辑
+const useMakeOrderEffect = () => {
+  const router = useRouter()
+  const route = useRoute()
+  const store = useStore()
+  const shopId = parseInt(route.params.id, 10)
+
+  const { shopName, caculations, productList } = useCommonCartEffect(shopId)
+  const { show, toastMessage, showToast } = useToastEffect()
+
+  // 提交、取消订单
+  const handleConfirmOrder = async (isCanceled) => {
+    const products = []
+    for (const i in productList.value) {
+      const product = productList.value[i]
+      products.push({ id: parseInt(product._id, 10), num: product.count })
+    }
+    try {
+      const result = await post('/api/order', {
+        addressId: 1,
+        shopId,
+        shopName: shopName.value,
+        isCanceled,
+        products
+      })
+      console.log(result)
+      if (result?.errno === 0) {
+        store.commit('clearCartData', shopId)
+        router.push({ name: 'OrderList' })
+      } else {
+        showToast('下单失败')
+      }
+    } catch (e) {
+      showToast('下单失败')
+    }
+  }
+  return { show, toastMessage, caculations, handleConfirmOrder }
+}
+
+// 弹窗相关逻辑
+const useShowMaskEffect = () => {
+  const showConfirm = ref(false)
+  const handleSubmitClick = (state) => {
+    showConfirm.value = state
+  }
+
+  return { showConfirm, handleSubmitClick }
+}
 export default {
   name: 'Order',
   components: { Toast },
   setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const store = useStore()
-    const shopId = parseInt(route.params.id, 10)
-
-    const showConfirm = ref(false)
-
-    const { shopName, caculations, productList } = useCommonCartEffect(shopId)
-    const { show, toastMessage, showToast } = useToastEffect()
-
-    const handleSubmitClick = (state) => {
-      showConfirm.value = state
-    }
-
-    const handleConfirmOrder = async (isCanceled) => {
-      const products = []
-      for (const i in productList.value) {
-        const product = productList.value[i]
-        products.push({ id: parseInt(product._id, 10), num: product.count })
-      }
-      try {
-        const result = await post('/api/order', {
-          addressId: 1,
-          shopId,
-          shopName: shopName.value,
-          isCanceled,
-          products
-        })
-        console.log(result)
-        if (result?.errno === 0) {
-          store.commit('clearCartData', shopId)
-          router.push({ name: 'Home' })
-        } else {
-          showToast('下单失败')
-        }
-      } catch (e) {
-        showToast('下单失败')
-      }
-    }
+    const { show, toastMessage, caculations, handleConfirmOrder } = useMakeOrderEffect()
+    const { showConfirm, handleSubmitClick } = useShowMaskEffect()
 
     return { caculations, show, toastMessage, showConfirm, handleConfirmOrder, handleSubmitClick }
   }
 }
 </script>
+
 <style lang="scss" scoped>
 @import '@/style/variables.scss';
 .order{
@@ -92,7 +104,8 @@ export default {
   height: .49rem;
   line-height: .49rem;
   background: $active-color;
-  border-radius: .3rem;
+  border-top-left-radius: .3rem;
+  border-top-right-radius: .3rem;
 
   &__price{
     flex: 1;
@@ -124,14 +137,14 @@ export default {
     transform: translate(-50%, -50%); // 按自己的50%向左上移动
     width: 3rem;
     height: 1.56rem;
-    background: #FFF;
+    background: $active-color;
     border-radius: .12rem;
     text-align: center;
     &__title{
       margin: .24rem 0 0 0;
       line-height: .26rem;
       font-size: .18rem;
-      color: #333;
+      color: $content-fontcolor;
     }
     &__desc{
       margin: .08rem 0 0 0;
@@ -156,7 +169,7 @@ export default {
       &--last{
         margin-left: .12rem;
         background: #4fb0f9;
-        color: #FFF;
+        color: $active-color;
       }
     }
   }

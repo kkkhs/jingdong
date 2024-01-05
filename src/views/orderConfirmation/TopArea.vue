@@ -39,7 +39,7 @@ export default {
   background-repeat: no-repeat;
   &__header{
     position: relative;
-    padding-top: .26rem;
+    padding-top: .2rem;
     line-height: .24rem;
     color: $active-color;
     text-align: center;
