@@ -27,14 +27,14 @@
         </div>
         <div class="product__number">
           <span
-            class="product__number__minus"
+            class="product__number__minus iconfont"
             @click="() => {changeCartItem(shopId, item._id, item, -1, shopName)}"
-          >-</span>
+          >&#xe66d;</span>
           {{ cartList?.[shopId]?.productList?.[item._id]?.count || 0 }}
           <span
-            class="product__number__plus"
+            class="product__number__plus iconfont"
             @click="() => {changeCartItem(shopId, item._id, item, 1, shopName)}"
-          >+</span>
+          >&#xe65a;</span>
         </div>
       </div>
     </div>
@@ -203,16 +203,15 @@ export default ({
         border-radius: 50%;
         font-size: .2rem;
         text-align: center;
+        vertical-align: middle;
       }
       &__minus{
         margin-right: .05rem;
-        border: .01rem solid $medium-fontColor;
         color: $medium-fontColor;
       }
       &__plus{
         margin-left: .05rem;
-        background: $btn-bgColor;
-        color: $active-color;
+        color: $btn-bgColor;
       }
     }
   }

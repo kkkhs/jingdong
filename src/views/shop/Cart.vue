@@ -39,14 +39,14 @@
           </div>
           <div class="product__number">
             <span
-              class="product__number__minus"
+              class="product__number__minus iconfont"
               @click="() => {changeCartItemInfo(shopId, item._id, item, -1)}"
-            >-</span>
+            >&#xe66d;</span>
             {{ item.count || 0 }}
             <span
-              class="product__number__plus"
+              class="product__number__plus iconfont"
               @click="() => {changeCartItemInfo(shopId, item._id, item, 1)}"
-            >+</span>
+            >&#xe65a;</span>
           </div>
         </div>
       </template>
@@ -229,16 +229,15 @@ export default {
         border-radius: 50%;
         font-size: .2rem;
         text-align: center;
+        vertical-align: middle;
       }
       &__minus{
         margin-right: .05rem;
-        border: .01rem solid $medium-fontColor;
         color: $medium-fontColor;
       }
       &__plus{
         margin-left: .05rem;
-        background: $btn-bgColor;
-        color: $active-color;
+        color: $btn-bgColor;
       }
     }
   }
@@ -246,9 +245,9 @@ export default {
 .check{
   display: flex;
   box-sizing: border-box;
-  height: .49rem;
+  height: .5rem;
   border-top: .01rem solid $content-bgColor;
-  line-height: .49rem;
+  line-height: .5rem;
   &__icon{
     position: relative;
     width: .84rem;
