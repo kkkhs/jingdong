@@ -125,8 +125,8 @@ export default {
     margin: 0 .4rem .16rem .4rem;
     padding: 0 .16rem;
     background: #f9f9f9;
-    border: 1px solid rgba(0, 0, 0, 0.10);
-    border-radius: 12px;
+    border: .01rem solid rgba(0, 0, 0, 0.10);
+    border-radius: .12rem;
     &__content{
       margin-top: .12rem;
       line-height: .22rem;

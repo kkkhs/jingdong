@@ -53,7 +53,7 @@ export default ({
       color: $content-fontcolor;
     }
     &__tag{
-      margin-right: .16rem;
+      margin-right: .14rem;
     }
     &__highlight{
       margin: .08rem 0 0 0;
