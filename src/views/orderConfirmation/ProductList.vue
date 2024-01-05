@@ -8,7 +8,6 @@
     >
       <div
         class="products__item"
-        v-if="item.count > 0"
       >
         <img class="products__item__img" :src="item.imgUrl">
         <div class="products__item__detail">
