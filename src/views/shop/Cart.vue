@@ -290,6 +290,7 @@ export default {
     border-radius: .3rem;
     font-size: .14rem;
     text-align: center;
+    vertical-align: middle;
     a {
       color: $active-color;
       text-decoration: none;
