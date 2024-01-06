@@ -9,12 +9,22 @@
     </div>
     <div class="list">
       <div class="list__item">
-        <div class="list__item__icon iconfont">&#xe62c;</div>
+        <div class="list__item__icon list__item__icon--first iconfont">&#xe61b;</div>
+        <div class="list__item__text">我的钱包</div>
+        <div class="list__item__into iconfont">&#xe608;</div>
+      </div>
+      <div class="list__item">
+        <div class="list__item__icon list__item__icon--second iconfont">&#xe62c;</div>
         <div class="list__item__text">我的地址</div>
         <div class="list__item__into iconfont">&#xe608;</div>
       </div>
+      <div class="list__item">
+        <div class="list__item__icon list__item__icon--third iconfont">&#xe671;</div>
+        <div class="list__item__text">客服与帮助</div>
+        <div class="list__item__into iconfont">&#xe608;</div>
+      </div>
     </div>
-    <div class="quitBtn">退出登录</div>
+    <div class="exitBtn" @click="handleExit">退出登录</div>
   </div>
   <Docker :currentIndex="3"/>
 </template>
@@ -26,6 +36,12 @@ export default {
   name: 'Person',
   components: { Docker },
   setup() {
+    const handleExit = () => {
+      window.localStorage.clear()
+      window.location.reload()
+    }
+
+    return { handleExit }
   }
 }
 </script>
@@ -84,14 +100,23 @@ export default {
   border-radius: .08rem;
   &__item{
     display: flex;
+    border-bottom: .01rem solid $content-bgColor;
     padding: .2rem;
     font-size: .14rem;
     line-height: .22rem;
     &__icon{
-      color: $btn-bgColor;
       font-size: .25rem;
       height: .22rem;
       margin-right:.2rem;
+      &--first{
+        color: red;
+      }
+      &--second{
+        color: $btn-bgColor;
+      }
+      &--third{
+        color: purple;
+      }
     }
     &__text{
       flex: 1;
@@ -104,7 +129,7 @@ export default {
     }
   }
 }
-.quitBtn{
+.exitBtn{
   padding: .15rem .3rem;
   margin: .2rem auto;
   background: $btn-bgColor;
