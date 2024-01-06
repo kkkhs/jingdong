@@ -5,9 +5,9 @@
       class="products"
       v-for="cart in cartList"
       :key="cart"
-      v-show="cart.productList"
+      v-show="total(cart) > 0"
     >
-      <div class="products__title">{{ cart }}</div>
+      <div class="products__title">{{ cart.shopName }}</div>
       <div class="products__list">
         <template
           v-for="item in cart.productList"
@@ -41,17 +41,27 @@ import { useCommonCartEffect } from '@/effects/cartEffects.js'
 
 import Docker from '@/components/Docker.vue'
 import { useStore } from 'vuex'
+import { computed } from 'vue'
 export default ({
   name: 'CartList',
   components: { Docker },
   setup() {
     const store = useStore()
     const cartList = store.state.cartList
-    console.log(cartList)
-    for (const i in cartList) {
-      console.log(typeof i)
-    }
-    return { cartList, useCommonCartEffect }
+
+    const total = computed(() => (cart) => { // 计算属性传参
+      const productList = cart?.productList
+      let total = 0
+      if (productList) {
+        for (const i in productList) {
+          const product = productList[i]
+          total += product.count
+        }
+      }
+      return total
+    })
+
+    return { cartList, useCommonCartEffect, total }
   }
 })
 </script>

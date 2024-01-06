@@ -15,8 +15,6 @@ const getLocalCartList = () => {
   //
   //      }
   //   }
-  //   totalNum:
-  //   totalPrice:
   // }
   try { // 防止JSON.parse(undefine)报错
     return JSON.parse(localStorage.cartList)

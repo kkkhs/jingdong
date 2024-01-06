@@ -67,7 +67,6 @@ export default {
   components: { Docker },
   setup() {
     const { list } = useOrderListEffect()
-    console.log(list)
     return { list }
   }
 }
