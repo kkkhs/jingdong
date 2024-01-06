@@ -31,35 +31,42 @@
           </div>
         </template>
       </div>
+      <div class="totalBtn">共 {{total(cart)}} 件</div>
     </div>
   </div>
   <Docker :currentIndex='1'/>
 </template>
 
 <script>
-import { useCommonCartEffect } from '@/effects/cartEffects.js'
-
-import Docker from '@/components/Docker.vue'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useCommonCartEffect } from '@/effects/cartEffects.js'
+import Docker from '@/components/Docker.vue'
+
+// 处理购物车列表相关逻辑
+const useCartListEffect = () => {
+  const total = computed(() => (cart) => { // computed计算属性传参
+    const productList = cart?.productList
+    let total = 0
+    if (productList) {
+      for (const i in productList) {
+        const product = productList[i]
+        total += product.count
+      }
+    }
+    return total
+  })
+
+  return { total }
+}
+
 export default ({
   name: 'CartList',
   components: { Docker },
   setup() {
     const store = useStore()
     const cartList = store.state.cartList
-
-    const total = computed(() => (cart) => { // 计算属性传参
-      const productList = cart?.productList
-      let total = 0
-      if (productList) {
-        for (const i in productList) {
-          const product = productList[i]
-          total += product.count
-        }
-      }
-      return total
-    })
+    const { total } = useCartListEffect()
 
     return { cartList, useCommonCartEffect, total }
   }
@@ -99,7 +106,7 @@ export default ({
 
   &__title{
     padding: 0 .18rem 0 .16rem;
-    margin-top: .16rem;
+    margin: .16rem 0;
     line-height: .22rem;
     font-size: .16rem;
     color: $content-fontcolor;
@@ -107,7 +114,7 @@ export default ({
   &__item{
     position: relative;
     display: flex;
-    padding: .16rem;
+    padding: 0 .16rem .16rem .16rem;
     &__img{
       width: .46rem;
       height: .46rem;
@@ -141,5 +148,15 @@ export default ({
       font-size: .12rem;
     }
   }
+}
+.totalBtn{
+  margin: 0 auto;
+  margin-bottom: .1rem;
+  padding: .1rem;
+  font-size: .14rem;
+  text-align: center;
+  width: 1.5rem;
+  background: #eee;
+  border-radius: .2rem;
 }
 </style>
